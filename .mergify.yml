@@ -32,7 +32,7 @@ pull_request_rules:
   - name: label work in progress PRs
     conditions:
       - label != "work in progress"
-      - title ~= '^WIP\b'
+      - title ~=^WIP\b
     actions:
       label:
         add:
@@ -40,7 +40,7 @@ pull_request_rules:
   - name: remove work in progress labels
     conditions:
       - label = "work in progress"
-      - title ~= '^(?!WIP\b)'
+      - title ~=^(?!WIP\b)
     actions:
       label:
         remove:
