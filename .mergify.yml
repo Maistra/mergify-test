@@ -45,16 +45,6 @@ pull_request_rules:
       label:
         remove:
           - "work in progress"
-  - name: label ready-to-merge
-    conditions:
-      - '#approved-reviews-by>=0'
-      - '#review-requested=0'
-      - '#changes-requested-reviews-by=0'
-      - label != "work in progress"
-    actions:
-      label:
-        add:
-        - "ready to merge"
   - name: label PRs needing review
     conditions:
     - label != "needs review"
@@ -89,3 +79,25 @@ pull_request_rules:
       label:
         remove:
         - "needs review"
+  - name: label ready-to-merge
+    conditions:
+      - label != "work in progress"
+      - label != "needs review"
+    actions:
+      label:
+        add:
+        - "ready to merge"
+  - name: remove ready-to-merge label when WIP
+    conditions:
+      - label = "work in progress"
+    actions:
+      label:
+        remove:
+        - "ready to merge"
+  - name: remove ready-to-merge label when review needed
+    conditions:
+      - label = "needs review"
+    actions:
+      label:
+        remove:
+        - "ready to merge"
