@@ -48,20 +48,9 @@ pull_request_rules:
   - name: label PRs needing review
     conditions:
     - label != "needs review"
-    - title ~= '^(?!WIP\b).+'
     - '#approved-reviews-by<2'
     - '#changes-requested-reviews-by=0'
     actions:
       label:
         add:
-        - "needs review"
-  - name: remove needs-review label
-    conditions:
-    - label = "needs review"
-    - title ~= '^WIP\b'
-    - '#approved-reviews-by>=2'
-    - '#changes-requested-reviews-by>0'
-    actions:
-      label:
-        remove:
         - "needs review"
