@@ -1,7 +1,7 @@
 pull_request_rules:
   - name: automatic merge (with squash) with strict when reviewed and not work in progress
     conditions:
-      - '#approved-reviews-by>=0'
+      - '#approved-reviews-by>=2'
       - '#review-requested=0'
       - '#changes-requested-reviews-by=0'
       #- '#commented-reviews-by=0'
@@ -14,9 +14,12 @@ pull_request_rules:
       merge:
         method: squash
         strict: smart
+      label:
+        remove:
+        - "ready to merge"
   - name: automatic merge (without squash) with strict when reviewed and not work in progress
     conditions:
-      - '#approved-reviews-by>=0'
+      - '#approved-reviews-by>=2'
       - '#review-requested=0'
       - '#changes-requested-reviews-by=0'
       #- '#commented-reviews-by=0'
@@ -29,10 +32,13 @@ pull_request_rules:
       merge:
         method: rebase
         strict: smart
+      label:
+        remove:
+        - "ready to merge"
   - name: label work in progress PRs
     conditions:
       - label != "work in progress"
-      - title ~=^WIP\b
+      - title ~= '^WIP\b'
     actions:
       label:
         add:
@@ -40,43 +46,18 @@ pull_request_rules:
   - name: remove work in progress labels
     conditions:
       - label = "work in progress"
-      - title ~=^(?!WIP\b)
+      - title ~= '^(?!WIP\b)'
     actions:
       label:
         remove:
           - "work in progress"
-  - name: label PRs needing review
+  - name: label PRs that can be merged
     conditions:
-    - label != "needs review"
-    - label != "work in progress"
-    - '#approved-reviews-by<2'
+    - '#approved-reviews-by>=2'
+    - '#review-requested=0'
     - '#changes-requested-reviews-by=0'
+    - label != "work in progress"
     actions:
       label:
         add:
-        - "needs review"
-  - name: remove needs-review label when in progress
-    conditions:
-    - label = "needs review"
-    - label = "work in progress"
-    actions:
-      label:
-        remove:
-        - "needs review"
-  - name: remove needs-review label when approved by two people
-    conditions:
-    - label = "needs review"
-    - '#approved-reviews-by>=2'
-    actions:
-      label:
-        remove:
-        - "needs review"
-  - name: remove needs-review label when changes requested
-    conditions:
-    - label = "needs review"
-    - '#changes-requested-reviews-by>0'
-    actions:
-      label:
-        remove:
-        - "needs review"
-
+        - "ready to merge"
